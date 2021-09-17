@@ -10,7 +10,7 @@
 #define APP_H_
 /*=================MAHMOUD=============*/
 
-void App_Init();														/*Init ECUAL*/
+void App_Init(void);														/*Init ECUAL*/
 
 uint8_t App_GetUserInput();												/*Get desired temperature from keypad (integer)*/
 
