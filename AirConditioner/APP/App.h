@@ -17,10 +17,10 @@ uint8_t App_GetUserInput();												/*Get desired temperature from keypad (in
 /* limits on inputs > 15 , <30*/
 /*read from keypad until = is pressed*/
 
-uint8_t App_MeasureCurrentTemp();										/*Get current sensor readings*/
-/*get sensor readings (current temprature) */
+uint8_t App_MeasureCurrentTemp(void);										/*Get current sensor readings*/
+/*get sensor readings (current temperature) */
 
-void App_AdjustTemp(uint8_t currentTemp ,uint8_t desired);				/*Adjust fan according to desired temp*/
+void App_AdjustTemp(uint8_t currentTemp ,uint8_t desiredTemp);				/*Adjust fan according to desired temp*/
 
 /*if currentTemp > desired FAN On*/
 /*else Fan OFF*/
