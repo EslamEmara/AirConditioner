@@ -40,7 +40,8 @@ uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (i
 			for (counter = 0 ; counter < 2 ; counter ++) {				// convert array of integers into single integer
 				int_keys = 10*int_keys + array_of_keys[counter] ;
 			}
-			for (counter = 0 ; counter < 2 ; counter ++) {			// assign zeros to the array after finishing
+			no_of_digits = 0 ;										// assign zero to no_of_digits to start again 
+			for (counter = 0 ; counter < 3 ; counter ++) {			// assign zeros to the array after finishing
 				array_of_keys [counter] = 0 ;
 			}
 			// return converted value
