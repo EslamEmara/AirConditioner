@@ -85,22 +85,12 @@ void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_ConvCompleteCheck int_o
                ADC_VoltRef ref_volt);
 
 
-/*****
- * Description: Enable a channel to operate
- * Paramerters: uint8 channel_ID
- * Return: none
- * Ex: ADC_EnableChannel(ADC0_Channel);
- */
-void ADC_EnableChannel(ADC_Ch_Select channel);
-
-
 
 /*****
  * Description: Read the value of ADC data register 
  * Paramerters: none
- * Return: uint16_t sensor reading
- * Ex: uint16_t result = Adc_getReading();
- * NOTE: We Only use one channel so we don't pass any argument here (implemented at the next update ISA)
+ * Return: uint16_t sensor_reading
+ * Ex: uint16_t result = Adc_getReading(ADC6_Channel);
  */
 uint16_t ADC_GetReading(ADC_Ch_Select channel);
 
