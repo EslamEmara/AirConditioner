@@ -1,8 +1,8 @@
 /*
  * ADC_private.h
  *
- * Created: 9/10/2021 9:28:11 PM
- *  Author: farouk
+ * Created: 9/18/2021 9:28:11 PM
+ *  Author: Overflow
  */ 
 
 
@@ -18,5 +18,6 @@ void (*volatile ADC_Callback) (void);
 #define ADCL	*((volatile uint8_t *)0x24)
 #define ADCH	*((volatile uint8_t *)0x25)
 #define SFIOR   *((volatile uint8_t *)0x50)
+#define ADC_DATA *((volatile uint16_t *)0x24)
 
 #endif 

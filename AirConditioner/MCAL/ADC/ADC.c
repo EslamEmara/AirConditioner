@@ -1,8 +1,8 @@
 /*
  * ADC.c
  *
- * Created: 9/10/2021 9:28:11 PM
- *  Author: farouk
+ * Created: 9/18/2021 9:28:11 PM
+ *  Author: Overflow
  */ 
 
 #include "STD_TYPES.h"
@@ -13,18 +13,27 @@
 #include "ADC_config.h"
 
 
-
-void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_TrigMode int_or_pol,
+/*****
+ * Description: set global initialization to all channels [prescalar,voltage ref,int or poll,operation mode]
+ * Paramerters: uint8 mode (single conversion, free running, ..)
+ * 				uint8 prescalar (ADC_Div_2)
+ *				uint8 trig_mode (INt, polling)
+ *				uint8 reference volt ()
+ * Return: none
+ * Ex: ADC_Init(AutoTrig_FreeRun,ADC_Div_128,ADC_Polling,_2_56V_VoltREF);
+ */
+void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_ConvCompleteCheck int_or_pol,
                ADC_VoltRef ref_volt)
 {
 	// reset registers
 	ADMUX  = 0x00;
 	ADCSRA = 0x00;
- 
+    // set ADEN in ADCSRA (ADC Enable)
+    SET_BIT(ADCSRA,7);
 	// enable channel & define the refrence voltage
-	ADMUX |= ADC_VoltageReferPin;  //0b11000010
+	ADMUX |= ref_volt;  //0b11000010
 	// set preescaler & trigger mode & int_or_polling
-	ADCSRA |=  (Prescaler | (Mode<<8) | int_or_pol); //0b00011011;
+	ADCSRA |=  (Prescaler | Mode | int_or_pol); //0b00011011;
 	// clear SFIOR (last 4 bits)
 	SFIOR &= ~(0xE0);
 	// set auto-trigger mode
@@ -32,23 +41,31 @@ void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_TrigMode int_or_pol,
 
 }
 
-void ADC_EnableChannel(ADC_Ch_Select channel)
+
+/*****
+ * Description: Read the value of ADC data register 
+ * Paramerters: uint8 channel_ID
+ * Return: uint16_t sensor reading
+ * Ex: uint16_t result = Adc_getReading(ADC3_Channel);
+ */
+uint16_t ADC_GetReading(ADC_Ch_Select channel)
 {
+	// select ADC channel
 	ADMUX |=  channel;
-}
-
-void ADC_StartConversion(ADC_Ch_Select channel)
-{
-	// set ADEN in ADCSRA (ADC Enable)
-	ADCSRA |= (1<<8);
 	// set ADSC in ADCSRA ADC (start conversion)
-	ADCSRA |= (1<<7);
+	SET_BIT(ADCSRA,6);
+	// wait until flag is set (conversion completed)
+	while(!GET_BIT(ADCSRA,4));
+	// clear the flag
+	SET_BIT(ADCSRA,4);
+	uint16_t reading = ADC_DATA;
+	
+	return reading;
 }
 
-extern "C" {
-	ISR(ADC_vect){
-		if(ADC_Callback != NULL)
-		ADC_Callback();
-	}
+#if KEY == LOCKED
+void ADC_Set_Callback(void(*pf)(void))
+{
+	ADC_Callback = pf;
 }
-			
+#endif
