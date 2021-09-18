@@ -6,11 +6,9 @@
  */ 
 void Lm35_init(EN_SensorID_t SensorID)
 {
-	ADC_Init(AutoTrig_FreeRun,ADC_Div_128,ADC_Polling,_2_56V_VoltREF) // initialize ADC
-	ADC_EnableChannel(ADC_Ch_Select SensorID); // Enable ADC on chosen channel
-	ADC_StartConversion(); //start converting the reading to digital
+	ADC_Init(AutoTrig_FreeRun, ADC_Div_128, ADC_Polling, _2_56V_VoltREF) // initialize ADC
 }
 uint8_t Lm35_GetTemp(EN_SensorID_t SensorID)
 {
-	return ADC_GetReading(); // get the converted reading from ADC data register
+	return ADC_GetReading(SensorID); // get the converted reading from ADC data register
 }
