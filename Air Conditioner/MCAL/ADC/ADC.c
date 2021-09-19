@@ -45,7 +45,7 @@ void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_ConvCompleteCheck int_o
 /*****
  * Description: Read the value of ADC data register 
  * Paramerters: uint8_t channel_ID
- * Return: uint16_t sensor reading
+ * Return: uint16_t sensor reading (Digital)
  * Ex: uint16_t result = Adc_getReading(ADC3_Channel);
  */
 uint16_t ADC_GetReading(ADC_Ch_Select channel)
@@ -56,9 +56,12 @@ uint16_t ADC_GetReading(ADC_Ch_Select channel)
 	SET_BIT(ADCSRA,6);
 	// wait until flag is set (conversion completed)
 	while(!GET_BIT(ADCSRA,4));
-	// clear the flag
+	
+	uint16_t reading = ADC_DATA; // store ADC data register value
+	
+	// clear the flag (must be done after reading adc data)
 	SET_BIT(ADCSRA,4);
-	uint16_t reading = ADC_DATA;
+	
 	
 	return reading;
 }
