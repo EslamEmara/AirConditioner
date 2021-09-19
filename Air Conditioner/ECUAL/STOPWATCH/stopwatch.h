@@ -8,9 +8,10 @@
 
 #ifndef STOPWATCH_H_
 #define STOPWATCH_H_
-#include "../MCAL/TIMER/Timer.h"
+
+#include "../../MCAL/TIMER/Timer.h"
+
 /****************************************************** GLOBAL VARIABLES *****************************************************/
-ST_TIMER_config_t config = {TIMER1, FREQ_1_MHZ, CTC_MODE}; // configure timer
 	
 /***************************************************** FUNCTIONS PROTOTYPES **************************************************/
 /*****
@@ -20,7 +21,7 @@ ST_TIMER_config_t config = {TIMER1, FREQ_1_MHZ, CTC_MODE}; // configure timer
 			   repeating_number: specify repeating times of the function
  * Return: uint16_t sensor reading
  */
-void set_stopWatch(float delay, void (*function)(void), uint8_t repeating_number)
+void set_stopWatch(float delay, void (*function)(void), uint8_t repeating_number);
 
 
 

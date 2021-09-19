@@ -43,10 +43,10 @@ void Motor_init(ST_MOTORconfig_t config)
  *	void return. 
  *	Expected output: Motor rotate clockwise if inputs are valid 
  */
-void Motor_moveForward(ST_MOTORconfig_t config,uint8 speed)
+void Motor_moveForward(ST_MOTORconfig_t config,uint8_t speed)
 {
-	DIO_SetPinValue(config.DIR1_PORT,config.DIR1_PIN,LOW);
-	DIO_SetPinValue(config.DIR2_PORT,config.DIR2_PIN,HIGH);
+	DIO_SetPinValue(config.DIR1_PORT,config.DIR1_PIN,MOTOR_LOW);
+	DIO_SetPinValue(config.DIR2_PORT,config.DIR2_PIN,MOTOR_HIGH);
 
 	if (speed>=0 && speed <=100)
 		pwm_SetSpeed(config.PWM_ID,speed);
@@ -59,10 +59,10 @@ void Motor_moveForward(ST_MOTORconfig_t config,uint8 speed)
  *	Expected output: Motor rotate anti-clockwise if inputs are valid 
  */
 
-void Motor_moveBackwards(ST_MOTORconfig_t config,uint8 speed)
+void Motor_moveBackwards(ST_MOTORconfig_t config,uint8_t speed)
 {
-		DIO_SetPinValue(config.DIR2_PORT,config.DIR2_PIN,LOW);
-		DIO_SetPinValue(config.DIR1_PORT,config.DIR1_PIN,HIGH);
+		DIO_SetPinValue(config.DIR2_PORT,config.DIR2_PIN,MOTOR_LOW);
+		DIO_SetPinValue(config.DIR1_PORT,config.DIR1_PIN,MOTOR_HIGH);
 		if (speed>=0 && speed <=100)
 			pwm_SetSpeed(config.PWM_ID,speed);
 }

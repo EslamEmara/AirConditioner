@@ -8,7 +8,9 @@
 
 #ifndef LM35_H_
 #define LM35_H_
-#include "../ADC/ADC_interface.h"
+
+#include "../../MCAL/ADC/ADC_interface.h"
+
 typedef enum{
 	LM35_ID0,
 	LM35_ID1,

@@ -5,7 +5,7 @@
  *  Author: Mohamed AbdelAzeem
  */ 
 #include "DIO_Config.h"
-#include "common_macros.h"
+#include "BIT_MATH.h"
 
 void DIO_SetPinDirection (uint8_t PortNumber , uint8_t PinNumber , uint8_t Direction) {
 	switch (PortNumber) {

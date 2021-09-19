@@ -9,8 +9,7 @@
 #ifndef DIO_INT_H_
 #define DIO_INT_H_
 
-#include "Std_Types.h"
-#include "Regs_map.h"
+#include "BIT_MATH.h"
 #include "DIO_REG.h"
 
 #define portA 0

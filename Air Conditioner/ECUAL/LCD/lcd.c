@@ -207,7 +207,7 @@ void LCD_displayCharacter(uint8_t data)
 #endif
 }
 
-void LCD_displayString(const char *Str)
+void LCD_displayString(uint8_t *Str)
 {
 	uint8_t i = 0;
 	while(Str[i] != '\0')
@@ -226,7 +226,7 @@ void LCD_displayString(const char *Str)
 
 void LCD_goToRowColumn(uint8_t row,uint8_t col)
 	{
-	uint8_t Address;
+	uint8_t Address = 0;
 
 	/* first of all calculate the required address */
 	switch(row)
@@ -243,13 +243,14 @@ void LCD_goToRowColumn(uint8_t row,uint8_t col)
 		case 3:
 				Address=col+0x50;
 				break;
+			
 	}
 	/* to write to a specific address in the LCD
 	 * we need to apply the corresponding command 0b10000000+Address */
 	LCD_sendCommand(Address | SET_CURSOR_LOCATION);
 }
 
-void LCD_displayStringRowColumn(uint8_t row,uint8_t col,const char *Str)
+void LCD_displayStringRowColumn(uint8_t row,uint8_t col,uint8_t *Str)
 {
 	LCD_goToRowColumn(row,col); /* go to to the required LCD position */
 	LCD_displayString(Str); /* display the string */
@@ -257,7 +258,7 @@ void LCD_displayStringRowColumn(uint8_t row,uint8_t col,const char *Str)
 
 void LCD_intgerToString(int data)
 {
-   char buff[16]; /* String to hold the ascii result */
+   uint8_t buff[16]; /* String to hold the ascii result */
    tostring(buff,data); /* 10 for decimal */
    LCD_displayString(buff);
 }

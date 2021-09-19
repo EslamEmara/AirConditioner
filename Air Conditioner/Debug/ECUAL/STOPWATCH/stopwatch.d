@@ -1,0 +1,19 @@
+ECUAL/STOPWATCH/stopwatch.d ECUAL/STOPWATCH/stopwatch.o: \
+ ../ECUAL/STOPWATCH/stopwatch.c ../ECUAL/STOPWATCH/stopwatch.h \
+ ../ECUAL/STOPWATCH/../../MCAL/TIMER/Timer.h \
+ ../ECUAL/STOPWATCH/../../MCAL/TIMER/TIMER_RegMap.h \
+ ../ECUAL/STOPWATCH/../../MCAL/TIMER/TypeDefs.h \
+ ../ECUAL/STOPWATCH/../../MCAL/TIMER/BIT_MATH.h \
+ ../ECUAL/STOPWATCH/../../MCAL/TIMER/Timer_config.h
+
+../ECUAL/STOPWATCH/stopwatch.h:
+
+../ECUAL/STOPWATCH/../../MCAL/TIMER/Timer.h:
+
+../ECUAL/STOPWATCH/../../MCAL/TIMER/TIMER_RegMap.h:
+
+../ECUAL/STOPWATCH/../../MCAL/TIMER/TypeDefs.h:
+
+../ECUAL/STOPWATCH/../../MCAL/TIMER/BIT_MATH.h:
+
+../ECUAL/STOPWATCH/../../MCAL/TIMER/Timer_config.h:

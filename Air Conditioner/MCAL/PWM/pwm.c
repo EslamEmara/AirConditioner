@@ -4,15 +4,16 @@
  *  Author: Mahmoud Ayoub
  */ 
 #include "pwm.h"
+
 /*
 ID          >> PWM1 , PWM2
 pwm mode	>> NON_INVERTING_MODE , INVERTING_MODE
 prescalar	>> 0 , 8 , 64 , 256 , 1024
 */
 
-void pwm_init (uint8 ID , uint8 mode , uint16 prescalar) {
+void pwm_init (uint8_t ID , uint8_t mode , uint16_t prescalar) {
 	if (ID == PWM1) {
-		PORTB_DIR |= (1<<3) ;
+		portb_DIR |= (1<<3) ;
 		if (mode == NON_INVERTING_MODE) {		// fast pwm - non inverting mode
 			switch (prescalar) {
 				case 0 :
@@ -53,7 +54,7 @@ void pwm_init (uint8 ID , uint8 mode , uint16 prescalar) {
 			}
 	}
 	else if (ID == PWM2) {
-		 PORTD_DIR |= ( 1<< 7 ) ;
+		 portd_DIR |= ( 1<< 7 ) ;
 		if (mode == NON_INVERTING_MODE) {		// fast pwm - non inverting mode
 			switch (prescalar) {
 				case 0 :
@@ -94,8 +95,8 @@ void pwm_init (uint8 ID , uint8 mode , uint16 prescalar) {
 		}
 	}
 }
-void pwm_SetSpeed (uint8 ID ,uint8 percentage) {
-	uint8 duty_cycle = 255 * percentage / 100 ; 
+void pwm_SetSpeed (uint8_t ID ,uint8_t percentage) {
+	uint8_t duty_cycle = 255 * percentage / 100 ; 
 	if (ID == PWM1) {
 		T0_OutCmp_REG = duty_cycle ; 
 	}

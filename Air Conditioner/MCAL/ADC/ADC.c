@@ -5,8 +5,8 @@
  *  Author: Overflow
  */ 
 
-#include "STD_TYPES.h"
-#include "BIT_MATH.h"
+#include "std_types.h"
+#include "Bit_Math.h"
 
 #include "ADC_interface.h"
 #include "ADC_private.h"
@@ -15,10 +15,10 @@
 
 /*****
  * Description: set global initialization to all channels [prescalar,voltage ref,int or poll,operation mode]
- * Paramerters: uint8 mode (single conversion, free running, ..)
- * 				uint8 prescalar (ADC_Div_2)
- *				uint8 trig_mode (INt, polling)
- *				uint8 reference volt ()
+ * Paramerters: uint8_t mode (single conversion, free running, ..)
+ * 				uint8_t prescalar (ADC_Div_2)
+ *				uint8_t trig_mode (INt, polling)
+ *				uint8_t reference volt ()
  * Return: none
  * Ex: ADC_Init(AutoTrig_FreeRun,ADC_Div_128,ADC_Polling,_2_56V_VoltREF);
  */
@@ -44,7 +44,7 @@ void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_ConvCompleteCheck int_o
 
 /*****
  * Description: Read the value of ADC data register 
- * Paramerters: uint8 channel_ID
+ * Paramerters: uint8_t channel_ID
  * Return: uint16_t sensor reading
  * Ex: uint16_t result = Adc_getReading(ADC3_Channel);
  */

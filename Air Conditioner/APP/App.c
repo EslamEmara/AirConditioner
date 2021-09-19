@@ -4,17 +4,23 @@
  *  Author: Mahmoud Ayoub - Eslam Emara
  */ 
 
+
+
+#include "App.h"
+
 #define CURRENT_TEMP_ROW_COLUMN				1,0
 #define DESIRED_TEMP_ROW_COLUMN				1,0
+
 #define WAIT_TIME							5
 
 #define DESIRED_MODE						1
 #define ACTUAL_MODE							0
 
-uint8_t gLcd_mode = ACTUAL_MODE;
-uint8_t gDesired_temp = 25;
-uint8_t gTimeOut = 0;
-ST_MOTORconfig_t MOTOR_1_config = {PORTA,0,PORTB,3 , PWM1}      // FAN configuration
+uint8_t gLcd_mode;
+uint8_t gDesired_temp;
+uint8_t gTimeOut;
+
+ST_MOTORconfig_t MOTOR_1_config = {portA,1,portA,2,PWM1};      // FAN configuration
 
 /*
 Description : function to initialize ECUAL (LCD , Keypad , Fan , Temp sensor)
@@ -25,11 +31,16 @@ outputs		: none
 void TimerCounter (void);
 
 void App_Init(void) {
+	
 	LCD_init () ; 
-	Lm35_init () ;
+	Lm35_init (LM35_ID0) ;
 	Motor_init(	MOTOR_1_config );; 
 	set_stopWatch(WAIT_TIME, TimerCounter,1);
-
+	LCD_displayStringRowColumn(0,0,"Current temprature");
+	gLcd_mode = ACTUAL_MODE;
+	gDesired_temp = 25;
+	gTimeOut = 0;
+	
 }
 
 /*
@@ -47,7 +58,7 @@ uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (i
 	while (1) {
 		single_key = KeyPad_getPressedKey () ;                               // get key pressed on keypad
 		if ((single_key != '=') && (single_key != '*') && (single_key != '%') && (single_key != '+') && (single_key != '-')) {									// user doesn't finish entering temperature
-			LCD_MODE = DESIRED_MODE;
+			gLcd_mode = DESIRED_MODE;
 			if (no_of_digits < 2) {									// no of digits pressed still valid
 				array_of_keys [no_of_digits] = single_key ;				// add pressed key into the array of integers
 				no_of_digits ++ ;
@@ -114,19 +125,21 @@ void convert_2DigitInt_to_str(uint8_t number,uint8_t* arr){
 		arr[2]= '\0';
 	}
 }
+
 void App_PrintCurrenTemp(uint8_t current)								/*Print Temp values on LCD*/
 {
-	uint8_t* Str_number;
-	convert_2DigitInt_to_str(current , Str_number);
+	uint8_t* Str_number = '\0';
+	convert_2DigitInt_to_str(current,Str_number);
 	LCD_clearScreen();
-	Lcd_SendStringXY(CURRENT_TEMP_ROW_COLUMN,Str_number);
+	LCD_displayString(Str_number);
 }
-void App_PrintDesiredMode(uint8_t desired);
+
+void App_PrintDesiredMode()
 {
-	uint8_t* Str_number;
-	convert_2DigitInt_to_str(desired , Str_number);
+	uint8_t* Str_number = '\0';
+	convert_2DigitInt_to_str(gDesired_temp,Str_number);
 	LCD_clearScreen();
-	Lcd_SendStringXY(DESIRED_TEMP_ROW_COLUMN,Str_number);
+	LCD_displayString(Str_number);
 }
 
 void app(){

@@ -22,16 +22,17 @@
  *******************************************************************************/
 
 /* Keypad configurations for number of rows and columns */
-#define N_col 3
+#define N_col 4
 #define N_row 4
 
 /* Keypad Port Configurations */
 /*#define KEYPAD_PORT_OUT PORTA
 #define KEYPAD_PORT_IN  PINA
 #define KEYPAD_PORT_DIR DDRA*/
-#define KEYPAD_PORT_OUT portA
-#define KEYPAD_PORT_IN  portA
-#define KEYPAD_PORT_DIR portA
+
+#define KEYPAD_PORT_OUT portC
+#define KEYPAD_PORT_IN  portC
+#define KEYPAD_PORT_DIR portC
 
 
 /*******************************************************************************

@@ -9,7 +9,7 @@
 #ifndef ADC_INTERFACE_H_
 #define ADC_INTERFACE_H_
 
-
+#include "std_types.h"
 
 /* voltage reference for ADC */
 typedef enum
@@ -36,7 +36,7 @@ typedef enum
 	ADC4_Channel,
 	ADC5_Channel,
 	ADC6_Channel,
-	ADC7_Channel
+	ADC7_Channel,
 }ADC_Ch_Select;
 
 
@@ -46,7 +46,7 @@ typedef enum
 	SingleConvertion    = 0x0000,
 	AutoTrig_FreeRun    = 0x0020,
 	AutoTrig_AnalogComp = 0x2020,
-	AutoTrig_INT0_Req   = 0x4020
+	AutoTrig_INT0_Req   = 0x4020,
 // the last two digits for SFIOR & the others for polling or trigger
 	
 }ADC_Mode;
@@ -74,10 +74,10 @@ typedef enum
 
 /*****
  * Description: set global initialization to all channels [prescalar,voltage ref,int or poll,operation mode]
- * Paramerters: uint8 mode (single conversion, free running, ..)
- * 				uint8 prescalar ()
- *				uint8 trig_mode (INt, polling)
- *				uint8 reference volt ()
+ * Paramerters: uint8_t mode (single conversion, free running, ..)
+ * 				uint8_t prescalar ()
+ *				uint8_t trig_mode (INt, polling)
+ *				uint8_t reference volt ()
  * Return: none
  * Ex: ADC_Init(SingleConvertion,ADC_Div_128,ADC_Polling,_2_56V_VoltREF);
  */

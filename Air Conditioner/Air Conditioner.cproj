@@ -126,15 +126,6 @@
     <Compile Include="APP\App.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ECUAL\Delay\delay.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ECUAL\Delay\delay.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ECUAL\Delay\Std_Types.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="ECUAL\KEYPAD\common_macros.h">
       <SubType>compile</SubType>
     </Compile>
@@ -148,9 +139,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ECUAL\KEYPAD\std_types.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ECUAL\LCD\common_macros.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ECUAL\LCD\lcd.c">
@@ -198,6 +186,12 @@
     <Compile Include="MCAL\ADC\ADC_private.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MCAL\ADC\Bit_Math.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MCAL\ADC\std_types.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MCAL\DIO\Bit_Math.h">
       <SubType>compile</SubType>
     </Compile>
@@ -243,7 +237,6 @@
     <Folder Include="ECUAL\KEYPAD" />
     <Folder Include="ECUAL\LCD" />
     <Folder Include="ECUAL\LM35" />
-    <Folder Include="ECUAL\Delay" />
     <Folder Include="ECUAL\STOPWATCH" />
     <Folder Include="MCAL" />
     <Folder Include="ECUAL" />

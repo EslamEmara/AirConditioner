@@ -51,10 +51,12 @@ uint8_t KeyPad_getPressedKey(void)
 			//KEYPAD_PORT_DIR = (0b00010000<<col);
 			DIO_SetPortDirection(KEYPAD_PORT_DIR,INPUT);
 			DIO_SetPinDirection(KEYPAD_PORT_DIR, 4 + col, OUTPUT);
+			
 			/*
 			 * clear the output pin column in this trace and enable the internal
 			 * pull up resistors for the rows pins
 			 */
+			
 			//KEYPAD_PORT_OUT = (~(0b00010000<<col));
 			DIO_SetPortValue(KEYPAD_PORT_OUT,(~(0b00010000<<col)));
 
