@@ -14,6 +14,7 @@
 uint8_t gLcd_mode = ACTUAL_MODE;
 uint8_t gDesired_temp = 25;
 uint8_t gTimeOut = 0;
+ST_MOTORconfig_t MOTOR_1_config = {PORTA,0,PORTB,3 , PWM1}      // FAN configuration
 
 /*
 Description : function to initialize ECUAL (LCD , Keypad , Fan , Temp sensor)
@@ -25,9 +26,8 @@ void TimerCounter (void);
 
 void App_Init(void) {
 	LCD_init () ; 
-	Keypad_init () ; 
-	Fan_init () ;  
-	Temp_sensor_init () ; 
+	Lm35_init () ;
+	Motor_init(	MOTOR_1_config );; 
 	set_stopWatch(WAIT_TIME, TimerCounter,1);
 
 }
@@ -45,8 +45,8 @@ uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (i
 	uint8_t int_keys = 0 ; 
 
 	while (1) {
-		single_key = keypad_read () ;                               // get key pressed on keypad
-		if (single_key != '=') {									// user doesn't finish entering temperature
+		single_key = KeyPad_getPressedKey () ;                               // get key pressed on keypad
+		if ((single_key != '=') && (single_key != '*') && (single_key != '%') && (single_key != '+') && (single_key != '-')) {									// user doesn't finish entering temperature
 			LCD_MODE = DESIRED_MODE;
 			if (no_of_digits < 2) {									// no of digits pressed still valid
 				array_of_keys [no_of_digits] = single_key ;				// add pressed key into the array of integers
@@ -79,7 +79,7 @@ outputs		: return value of measured temperature
 */
 uint8_t App_MeasureCurrentTemp(void) {
 	uint8_t current_temp = 0 ; 
-	current_temp = Temp_sensor_read () ; 
+	current_temp = Lm35_GetTemp (LM35_ID0) ; 
 	return current_temp ; 
 }							
 
@@ -92,10 +92,10 @@ void App_AdjustTemp(uint8_t currentTemp ,uint8_t desiredTemp) {
 	/*if currentTemp > desired FAN On*/
 	/*else Fan OFF*/
 	if (currentTemp > desiredTemp) {
-		Fan_ON () ; 
+		Motor_moveForward(MOTOR_1_config , 80) ;     // FAN ON 
 	}
 	else {
-		Fan_OFF () ; 
+		Motor_moveForward(MOTOR_1_config , 0) ;     // FAN OFF 
 	}
 }			
 

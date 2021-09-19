@@ -8,6 +8,12 @@
 
 #ifndef APP_H_
 #define APP_H_
+#include "../ECUAL/Delay/delay.h"
+#include "../ECUAL/KEYPAD/keypad.h"
+#include "../ECUAL/LCD/lcd.h"
+#include "../ECUAL/LM35/LM35.h"
+#include "../ECUAL/MOTOR/Motor.h"
+#include "../ECUAL/STOPWATCH/stopwatch.h"
 /*=================MAHMOUD=============*/
 
 void App_Init(void);														/*Init ECUAL*/
