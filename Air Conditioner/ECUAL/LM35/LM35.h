@@ -34,7 +34,7 @@ void Lm35_init(EN_SensorID_t SensorID);		/*init lm35 according to channel*/
  * Parameters: SensorID: selects the channel of LM35 to read the its value after conversion 
  * Return: Reading of LM35
  */
-uint8_t Lm35_GetTemp(EN_SensorID_t SensorID); /*Get reading from lm35*/
+float32_t Lm35_GetTemp(EN_SensorID_t SensorID); /*Get reading from lm35*/
 
 
 
