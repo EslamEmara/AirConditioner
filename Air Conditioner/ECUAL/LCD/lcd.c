@@ -12,8 +12,10 @@
 
 #include "lcd.h"
 #include "../../MCAL/DIO/DIO_Config.h"
-#include "../Delay/delay.h"
-#include "../../MCAL/DIO/DIO_Config.h"
+#include "../../MCAL/TIMER/Timer.h"
+
+
+ST_TIMER_config_t timer0_config1 = {TIMER0,FREQ_1_MHZ, CTC_MODE };
 
 /*******************************************************************************
  *                      Functions Definitions                                  *
@@ -62,12 +64,14 @@ void LCD_sendCommand(uint8_t command)
 	//CLEAR_BIT(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, RW, LOW);
 	
-	delay_us(1); /* delay for processing Tas = 50ns */
+	//delay_us(1); /* delay for processing Tas = 50ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 	//SET_BIT(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, HIGH);
 	
-	delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	//delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 	
 #if (DATA_BITS_MODE == 4)
@@ -82,16 +86,19 @@ void LCD_sendCommand(uint8_t command)
 		DIO_SetLowerHalfPortValue(LCD_DATA_PORT, (command & 0xF0) >> 4);
 #endif
 
-	delay_us(1); /* delay for processing Tdsw = 100ns */
+	//delay_us(1); /* delay for processing Tdsw = 100ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 	//CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, LOW);
 	
-	delay_us(1); /* delay for processing Th = 13ns */
+	//delay_us(1); /* delay for processing Th = 13ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 //	SET_BIT(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, HIGH);
-	delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	//delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	Timer_Delay(0.000001, timer0_config1);
 
 	/* out the lowest 4 bits of the required command to the data bus D4 --> D7 */
 #ifdef UPPER_PORT_PINS
@@ -102,18 +109,27 @@ void LCD_sendCommand(uint8_t command)
 	DIO_SetLowerHalfPortValue(LCD_DATA_PORT, (command & 0x0F));
 #endif
 
-	delay_us(1); /* delay for processing Tdsw = 100ns */
+	//delay_us(1); /* delay for processing Tdsw = 100ns */
+	Timer_Delay(0.000001, timer0_config1);
+	
 	//CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, LOW);
-	delay_us(1); /* delay for processing Th = 13ns */
+	
+	//delay_us(1); /* delay for processing Th = 13ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 #elif (DATA_BITS_MODE == 8)
 	//LCD_DATA_PORT = command; /* out the required command to the data bus D0 --> D7 */
 	DIO_SetPortValue(LCD_DATA_PORT, command);
-	delay_us(1); /* delay for processing Tdsw = 100ns */
+	
+	//delay_us(1); /* delay for processing Tdsw = 100ns */
+	Timer_Delay(0.000001, timer0_config1);
+	
 	//CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, LOW);
-	delay_us(1); /* delay for processing Th = 13ns */
+	
+	//delay_us(1); /* delay for processing Th = 13ns */
+	Timer_Delay(0.000001, timer0_config1);
 #endif
 }
 
@@ -125,11 +141,14 @@ void LCD_displayCharacter(uint8_t data)
 	//CLEAR_BIT(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, RW, LOW);
 	
-	delay_us(1); /* delay for processing Tas = 50ns */
+	//delay_us(1); /* delay for processing Tas = 50ns */
+	Timer_Delay(0.000001, timer0_config1);
+	
 	//SET_BIT(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
     DIO_SetPinValue(LCD_CTRL_PORT, E, HIGH);
 	
-	delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	//delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	Timer_Delay(0.000001, timer0_config1);
 #if (DATA_BITS_MODE == 4)
 	/* out the highest 4 bits of the required data to the data bus D4 --> D7 */
 #ifdef UPPER_PORT_PINS
@@ -140,15 +159,20 @@ void LCD_displayCharacter(uint8_t data)
 	DIO_SetLowerHalfPortValue(LCD_DATA_PORT, (data & 0xF0)>>4);
 #endif
 
-	delay_us(1); /* delay for processing Tdsw = 100ns */
+	//delay_us(1); /* delay for processing Tdsw = 100ns */
+	Timer_Delay(0.000001, timer0_config1);
+	
 	//CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, LOW);
 	
-	delay_us(1); /* delay for processing Th = 13ns */
+	//delay_us(1); /* delay for processing Th = 13ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 //	SET_BIT(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, HIGH);
-	delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	
+	//delay_us(1); /* delay for processing Tpw - Tdws = 190ns */
+	Timer_Delay(0.000001, timer0_config1);
 
 	/* out the lowest 4 bits of the required data to the data bus D4 --> D7 */
 #ifdef UPPER_PORT_PINS
@@ -159,19 +183,27 @@ void LCD_displayCharacter(uint8_t data)
 	DIO_SetLowerHalfPortValue(LCD_DATA_PORT, (data & 0x0F));
 #endif
 
-	delay_us(1); /* delay for processing Tdsw = 100ns */
+	//delay_us(1); /* delay for processing Tdsw = 100ns */
+	Timer_Delay(0.000001, timer0_config1);
+	
 	//CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, LOW);
 	
-	delay_us(1); /* delay for processing Th = 13ns */
+	//delay_us(1); /* delay for processing Th = 13ns */
+	Timer_Delay(0.000001, timer0_config1);
+	
 #elif (DATA_BITS_MODE == 8)
 	//LCD_DATA_PORT = data; /* out the required command to the data bus D0 --> D7 */
 	DIO_SetPortValue(LCD_DATA_PORT, data);
-	delay_us(1); /* delay for processing Tdsw = 100ns */
+	
+	//delay_us(1); /* delay for processing Tdsw = 100ns */
+	Timer_Delay(0.000001, timer0_config1);
 	
 	//CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	DIO_SetPinValue(LCD_CTRL_PORT, E, LOW);
-	delay_us(1); /* delay for processing Th = 13ns */
+	
+	//delay_us(1); /* delay for processing Th = 13ns */
+	Timer_Delay(0.000001, timer0_config1);
 #endif
 }
 
