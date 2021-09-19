@@ -16,6 +16,11 @@ void DIO_SetPinDirection (uint8_t PortNumber , uint8_t PinNumber , uint8_t Direc
 			else if (Direction == INPUT) {
 				CLEAR_BIT(DDRA_REG,PinNumber) ; 
 			}
+			else if (Direction == PULLUP){					//PULLUP MODE
+				CLEAR_BIT(DDRA_REG ,PinNumber);			//clear direction register
+				CLEAR_BIT(PULL_UP_DISABLE,2);						//enable pull up reg
+				SET_BIT(PORTA_REG ,PinNumber);					//set port pin (according to data sheet)
+			}
 		break;
 			
 		case portB :
@@ -24,6 +29,11 @@ void DIO_SetPinDirection (uint8_t PortNumber , uint8_t PinNumber , uint8_t Direc
 			}
 			else if (Direction == INPUT) {
 				CLEAR_BIT(DDRB_REG,PinNumber) ;
+			}
+			else if (Direction== PULLUP){					//PULLUP MODE
+				CLEAR_BIT(DDRB_REG ,PinNumber);			//clear direction register
+				CLEAR_BIT(PULL_UP_DISABLE,2);						//enable pull up reg
+				SET_BIT(PORTB_REG ,PinNumber);					//set port pin (according to data sheet)
 			}
 		break;
 		
@@ -34,6 +44,12 @@ void DIO_SetPinDirection (uint8_t PortNumber , uint8_t PinNumber , uint8_t Direc
 			else if (Direction == INPUT) {
 				CLEAR_BIT(DDRC_REG,PinNumber) ;
 			}
+			else if (Direction == PULLUP){					//PULLUP MODE
+				CLEAR_BIT(DDRC_REG ,PinNumber);			//clear direction register
+				CLEAR_BIT(PULL_UP_DISABLE,2);						//enable pull up reg
+				SET_BIT(PORTC_REG ,PinNumber);					//set port pin (according to data sheet)
+			}
+			
 			break;	
 			
 		case portD :
@@ -42,6 +58,11 @@ void DIO_SetPinDirection (uint8_t PortNumber , uint8_t PinNumber , uint8_t Direc
 			}
 			else if (Direction == INPUT) {
 				CLEAR_BIT(DDRD_REG,PinNumber) ;
+			}
+			else if (Direction== PULLUP){					//PULLUP MODE
+				CLEAR_BIT(DDRD_REG ,PinNumber);			//clear direction register
+				CLEAR_BIT(PULL_UP_DISABLE,2);						//enable pull up reg
+				SET_BIT(PORTD_REG ,PinNumber);					//set port pin (according to data sheet)
 			}
 		break;	
 	}

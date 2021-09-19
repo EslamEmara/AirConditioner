@@ -19,6 +19,7 @@
 
 #define OUTPUT 1
 #define INPUT 0
+#define PULLUP	2
 
 
 

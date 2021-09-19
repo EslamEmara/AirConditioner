@@ -10,8 +10,9 @@
 
 int main(void)
 {
+	
 	App_Init();
-    /* Replace with your application code */
+
     while (1) 
     {
 		app();

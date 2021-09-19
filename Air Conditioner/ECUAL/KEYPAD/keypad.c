@@ -1,137 +1,306 @@
- /******************************************************************************
+/*
+ * keypad.c
  *
- * Module: KEYPAD
- *
- * File Name: keypad.c
- *
- * Description: Source file for the Keypad driver
- *
- * Author:  Mohamed AbdelAzeem
- *
- *******************************************************************************/
+ * Created: 9/14/2021 12:12:53 PM
+ *  Author: 20109
+ */ 
 
 #include "keypad.h"
-#include "../../MCAL/DIO/DIO_Config.h"
-#include "common_macros.h"
-#include "Regs_map.h"
-#include "std_types.h"
-
-/*******************************************************************************
- *                      Functions Prototypes(Private)                          *
- *******************************************************************************/
-
-#if (N_col == 3)
 /*
- * Function responsible for mapping the switch number in the keypad to
- * its corresponding functional number in the proteus for 4x3 keypad
- */
-static uint8_t KeyPad_4x3_adjustKeyNumber(uint8_t button_number);
-#elif (N_col == 4)
+*Description: Function to init keypad according to the configuration file (see keypad_config.h)
+*Inputs: none 
+*void return
+*Expected Output: configured pins are used as DIO 
+*======================= make sure you configured the keypad pins in "keypad_config.h"========================
+*/
+#define  LOW 0
+void Keypad_init(){
+	#ifdef ROW_1						/*Configure rows as output*/
+		DIO_SetPinDirection(ROW_1,OUTPUT);
+	#endif
+	#ifdef ROW_2
+		DIO_SetPinDirection(ROW_2,OUTPUT);
+	#endif
+	#ifdef ROW_3
+		DIO_SetPinDirection(ROW_3,OUTPUT);
+	#endif
+	#ifdef ROW_4
+		DIO_SetPinDirection(ROW_4,OUTPUT);
+	#endif
+	
+	#ifdef COL_1						/*configure columns as inputs with pull up resistors*/
+		DIO_SetPinDirection(COL_1,PULLUP);
+	#endif
+	
+	#ifdef COL_2
+		DIO_SetPinDirection(COL_2,PULLUP);
+	#endif
+	
+	#ifdef COL_3
+		DIO_SetPinDirection(COL_3,PULLUP);
+	#endif
+	
+	#ifdef COL_4
+		DIO_SetPinDirection(COL_4,PULLUP);
+	#endif
+	
+	
+}
 /*
- * Function responsible for mapping the switch number in the keypad to
- * its corresponding functional number in the proteus for 4x4 keypad
- */
-static uint8_t KeyPad_4x4_adjustKeyNumber(uint8_t button_number);
-#endif
-
-/*******************************************************************************
- *                      Functions Definitions                                  *
- *******************************************************************************/
-uint8_t KeyPad_getPressedKey(void)
+*Function to check the pressed key on the 4*4 keypad
+*Inputs: none
+*return: Ascii code of the pressed button {'7','8','9','/'},{'4','5','6','*'},{'1','2','3','-'},{'o','0','=','+'}
+*if no button is pressed it return NO_KEY_PRESSED which is defined in keypad.h
+*/
+uint8_t Keypad_read(EN_KEYPAD_ReadingMode MODE)
 {
-	uint8_t col,row;
-	while(1)
-	{
-		for(col=0;col<N_col;col++) /* loop for columns */
-		{
-			/*
-			 * each time only one of the column pins will be output and
-			 * the rest will be input pins include the row pins
-			 */
-			//KEYPAD_PORT_DIR = (0b00010000<<col);
-			DIO_SetPortDirection(KEYPAD_PORT_DIR,INPUT);
-			DIO_SetPinDirection(KEYPAD_PORT_DIR, 4 + col, OUTPUT);
-			
-			/*
-			 * clear the output pin column in this trace and enable the internal
-			 * pull up resistors for the rows pins
-			 */
-			
-			//KEYPAD_PORT_OUT = (~(0b00010000<<col));
-			DIO_SetPortValue(KEYPAD_PORT_OUT,(~(0b00010000<<col)));
-
-			for(row=0;row<N_row;row++) /* loop for rows */
-			{
-				//BIT_IS_CLEAR(KEYPAD_PORT_IN,row)
-				if(DIO_GetPinValue(KEYPAD_PORT_IN, row) == 0) /* if the switch is press in this row */
-				{
-					#if (N_col == 3)
-						return KeyPad_4x3_adjustKeyNumber((row*N_col)+col+1);
-					#elif (N_col == 4)
-						return KeyPad_4x4_adjustKeyNumber((row*N_col)+col+1);
-					#endif
-				}
+	uint8_t mapping_return = 0;							/*variable to save the return of mapping function*/
+	uint8_t (*CallFunc) (uint8_t);								/*pointer to function that will be called in reading columns according to mode*/
+	
+	if (MODE == ONE_PRESS){
+		CallFunc = MapKeyPad4x4_OnePress;
+	}
+	else{
+		CallFunc = MapKeyPad4x4_cont;
+	}
+	
+	for (int rows =0 ; rows<ROWS; rows++)				/*loop on the rows*/
+	{	
+		if (rows == 0){
+			DIO_SetPinValue(ROW_1,0);						/*move the 0 from one pin to other*/
+			DIO_SetPinValue(ROW_2,1);
+			DIO_SetPinValue(ROW_3,1);
+			DIO_SetPinValue(ROW_4,1);
+			mapping_return = CallFunc(rows);		/*check for pressed column*/
+			if (mapping_return != NO_KEY_PRESSED){
+				return mapping_return;					/*return value if button is pressed in the row*/
 			}
 		}
+		else if (rows == 1){
+			
+			DIO_SetPinValue(ROW_1,1);						/*move the 0 from one pin to other*/
+			DIO_SetPinValue(ROW_2,0);
+			DIO_SetPinValue(ROW_3,1);
+			DIO_SetPinValue(ROW_4,1);
+			mapping_return = CallFunc(rows);
+			if (mapping_return != NO_KEY_PRESSED){
+				return mapping_return;
+			}
+		}
+		else if (rows == 2){
+				
+			DIO_SetPinValue(ROW_1,1);						/*move the 0 from one pin to other*/
+			DIO_SetPinValue(ROW_2,1);
+			DIO_SetPinValue(ROW_3,0);
+			DIO_SetPinValue(ROW_4,1);
+			mapping_return = CallFunc(rows);
+			if (mapping_return != NO_KEY_PRESSED){
+				return mapping_return;
+			}
+		}
+		else if (rows == 3){
+				
+			DIO_SetPinValue(ROW_1,1);						/*move the 0 from one pin to other*/
+			DIO_SetPinValue(ROW_2,1);
+			DIO_SetPinValue(ROW_3,1);
+			DIO_SetPinValue(ROW_4,0);	
+			mapping_return = CallFunc(rows);
+			if (mapping_return != NO_KEY_PRESSED){
+				return mapping_return;
+			}
+		}
+		
 	}
+	return NO_KEY_PRESSED;
 }
-
-#if (N_col == 3)
-
-static uint8_t KeyPad_4x3_adjustKeyNumber(uint8_t button_number)
+/*Function to return actual pin state one time only
+*Input parameters:  EN_PORTS_t PORT (DIO.h) 
+*					EN_PINS_t pin (DIO.h)
+*I/O parameters:	uint8_t* last_value reserves the last pin state 
+*return:	return pin state one time only and return any other value for the rest of readings
+*
+*/
+uint8_t read_one_press(uint8_t port,uint8_t pin,uint8_t* last_value)
 {
-	switch(button_number)
-	{
-		case 10: return '*'; // ASCII Code of *
-				 break;
-		case 11: return 0;
-				 break;
-		case 12: return '#'; // ASCII Code of #
-				 break;
-		default: return button_number;
+	uint8_t current_value =0;
+
+	uint8_t return_value = 0;
+	
+	current_value = DIO_GetPinValue(port,pin);
+	
+	if (current_value!= (*last_value)){
+		return_value = current_value;					/*return pressed value */
 	}
+	else return_value = 2;								/*return any other value*/
+	
+	*last_value = current_value;							/*update variables*/
+	
+	return return_value;
 }
 
-#elif (N_col == 4)
+/*
+*Function to map the button presses to the return values continuously
+*input:Row number to check
+*return:
+*it checks for pressed button in the selected row
+*if no button is pressed in the row it returns 0 ,otherwise it returns the character
+*of the pressed button continuously 
+*This function is designed for 4x4 keypad
+*/
 
-static uint8_t KeyPad_4x4_adjustKeyNumber(uint8_t button_number)
-{
-	switch(button_number)
+uint8_t MapKeyPad4x4_cont(uint8_t row){
+	switch (row)
 	{
-		case 1: return 7;
-				break;
-		case 2: return 8;
-				break;
-		case 3: return 9;
-				break;
-		case 4: return '%'; // ASCII Code of %
-				break;
-		case 5: return 4;
-				break;
-		case 6: return 5;
-				break;
-		case 7: return 6;
-				break;
-		case 8: return '*'; /* ASCII Code of '*' */
-				break;
-		case 9: return 1;
-				break;
-		case 10: return 2;
-				break;
-		case 11: return 3;
-				break;
-		case 12: return '-'; /* ASCII Code of '-' */
-				break;
-		case 13: return 13;  /* ASCII of Enter */
-				break;
-		case 14: return 0;
-				break;
-		case 15: return '='; /* ASCII Code of '=' */
-				break;
-		case 16: return '+'; /* ASCII Code of '+' */
-				break;
-		default: return button_number;
+		case 0:											/*elements of first row*/
+		{
+			if (!DIO_GetPinValue(COL_1)){
+				return '7';
+			}
+			else if (!DIO_GetPinValue(COL_2)){
+				return '8';
+			}
+			else if (!DIO_GetPinValue(COL_3)){
+				return '9';
+			}
+			else if (!DIO_GetPinValue(COL_4)){
+				return '/';
+			}
+			break;
+		}
+		case 1:											/*elements of second row*/
+		{
+			if (!DIO_GetPinValue(COL_1)){
+				return '4';
+			}
+			else if (!DIO_GetPinValue(COL_2)){
+				return '5';
+			}
+			else if (!DIO_GetPinValue(COL_3)){
+				return '6';
+			}
+			else if (!DIO_GetPinValue(COL_4)){
+				return '*';
+			}
+			break;
+		}
+		case 2:											/*elements of third row*/
+		{
+			if (!DIO_GetPinValue(COL_1)){
+				return '1';
+			}
+			else if (!DIO_GetPinValue(COL_2)){
+				return '2';
+			}
+			else if (!DIO_GetPinValue(COL_3)){
+				return '3';
+			}
+			else if (!DIO_GetPinValue(COL_4)){
+				return '-';
+			}
+			break;
+		}
+		case 3:											/*elements of fourth row*/
+		{
+			if (!DIO_GetPinValue(COL_1)){
+				return 'o';
+			}
+			else if (!DIO_GetPinValue(COL_2)){
+				return '0';
+			}
+			else if (!DIO_GetPinValue(COL_3)){
+				return '=';
+			}
+			else if (!DIO_GetPinValue(COL_4)){
+				return '+';
+			}
+		}
+		default:
+			return 0;									
 	}
+	
+	return NO_KEY_PRESSED;										/*return if no key is pressed in the selected row*/
 }
 
-#endif
+/*
+*Function to map the button presses to the return values one time only
+*input:Row number to check
+*return:
+*it checks for pressed button in the selected row
+*if no button is pressed in the row it returns 0 ,otherwise it returns the character
+*of the pressed button one time only and return any other value for the rest of readings
+*This function is designed for 4x4 keypad
+*/
+
+uint8_t MapKeyPad4x4_OnePress(uint8_t row){
+	static uint8_t lastpresses[16] = {0};
+	switch (row)
+	{
+		case 0:											/*elements of first row*/
+		{
+			if (read_one_press(COL_1,&lastpresses[0])==LOW){
+				return '7';
+			}
+			else if (read_one_press(COL_2,&lastpresses[1])==LOW){
+				return '8';
+			}
+			else if (read_one_press(COL_3,&lastpresses[2])==LOW){
+				return '9';
+			}
+			else if (read_one_press(COL_4,&lastpresses[3])==LOW){
+				return '/';
+			}
+			break;
+		}
+		case 1:											/*elements of second row*/
+		{
+			if (read_one_press(COL_1,&lastpresses[4])==LOW){
+				return '4';
+			}
+			else if (read_one_press(COL_2,&lastpresses[5])==LOW){
+				return '5';
+			}
+			else if (read_one_press(COL_3,&lastpresses[6])==LOW){
+				return '6';
+			}
+			else if (read_one_press(COL_4,&lastpresses[7])==LOW){
+				return '*';
+			}
+			break;
+		}
+		case 2:											/*elements of third row*/
+		{
+			if (read_one_press(COL_1,&lastpresses[8])==LOW){
+				return '1';
+			}
+			else if (read_one_press(COL_2,&lastpresses[9])==LOW){
+				return '2';
+			}
+			else if (read_one_press(COL_3,&lastpresses[10])==LOW){
+				return '3';
+			}
+			else if (read_one_press(COL_4,&lastpresses[11])==LOW){
+				return '-';
+			}
+			break;
+		}
+		case 3:											/*elements of fourth row*/
+		{
+			if (read_one_press(COL_1,&lastpresses[12])==LOW){
+				return 'o';
+			}
+			else if (read_one_press(COL_2,&lastpresses[13])==LOW){
+				return '0';
+			}
+			else if (read_one_press(COL_3,&lastpresses[14])==LOW){
+				return '=';
+			}
+			else if (read_one_press(COL_4,&lastpresses[15])==LOW){
+				return '+';
+			}
+		}
+		default:
+		return 0;
+	}
+	
+	return NO_KEY_PRESSED;										/*return if no key is pressed in the selected row*/
+}

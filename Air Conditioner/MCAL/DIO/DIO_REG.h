@@ -27,5 +27,8 @@
 #define PORTD_REG			(*((volatile uint8_t*)0x32))
 #define PIND_REG			(*((volatile uint8_t*)0x30))
 
+#define PULL_UP_DISABLE		(*((volatile uint8_t*)(0x50)))			//bit 2
+
+
 
 #endif /* DIO_REG_H_ */

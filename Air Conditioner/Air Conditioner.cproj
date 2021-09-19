@@ -126,19 +126,13 @@
     <Compile Include="APP\App.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ECUAL\KEYPAD\common_macros.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="ECUAL\KEYPAD\keypad.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ECUAL\KEYPAD\keypad.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ECUAL\KEYPAD\Regs_map.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ECUAL\KEYPAD\std_types.h">
+    <Compile Include="ECUAL\KEYPAD\Keypad_config.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ECUAL\LCD\lcd.c">

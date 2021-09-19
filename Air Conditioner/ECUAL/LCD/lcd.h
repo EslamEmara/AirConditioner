@@ -53,10 +53,10 @@
  *******************************************************************************/
 void LCD_sendCommand(uint8_t command);
 void LCD_displayCharacter(uint8_t data);
-void LCD_displayString(uint8_t *Str);
+void LCD_displayString(char *Str);
 void LCD_init(void);
 void LCD_clearScreen(void);
-void LCD_displayStringRowColumn(uint8_t row,uint8_t col,uint8_t *Str);
+void LCD_displayStringRowColumn(uint8_t row,uint8_t col,char *Str);
 void LCD_goToRowColumn(uint8_t row,uint8_t col);
 void LCD_intgerToString(int data); //Display inetger 
 void tostring(uint8_t str[], uint8_t number);

@@ -20,6 +20,11 @@ uint8_t gLcd_mode;
 uint8_t gDesired_temp;
 uint8_t gTimeOut;
 
+uint8_t keypad_reading ;			/*return of keypad press*/
+uint8_t number[3] ={0};				/*array of characters contain user inputs*/
+uint8_t digit_count;				/*number of digits entered*/
+uint8_t num_int;					/*number in integer format*/
+
 ST_MOTORconfig_t MOTOR_1_config = {portA,1,portA,2,PWM1};      // FAN configuration
 
 /*
@@ -32,15 +37,18 @@ void TimerCounter (void);
 
 void App_Init(void) {
 	
-	LCD_init () ; 
+	LCD_init () ;
+	Keypad_init(); 
 	Lm35_init (LM35_ID0) ;
 	Motor_init(	MOTOR_1_config );; 
-	set_stopWatch(WAIT_TIME, TimerCounter,1);
-	LCD_displayStringRowColumn(0,0,"Current temprature");
+	//set_stopWatch(WAIT_TIME, TimerCounter,1);
+	//LCD_displayStringRowColumn(0,0,"Current");
 	gLcd_mode = ACTUAL_MODE;
 	gDesired_temp = 25;
 	gTimeOut = 0;
-	
+	digit_count = 0;	
+	num_int =0;
+	keypad_reading =0;
 }
 
 /*
@@ -48,25 +56,85 @@ Description : function to get desired temperature from user (only 2 digits)
 inputs		: none
 outputs		: return value of desired temperature	|| 0 >> number entered is out of limits
 */
-uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (integer)*/
-	uint8_t no_of_digits = 0 ;
+
+void convert_2DigitInt_to_str(uint8_t number,char* arr){
+	if (number < 10){
+		arr[0] = number + '0';
+		arr[1] = '\0';
+		
+	}
+	else{
+		arr[0] = (number / 10) + '0';
+		arr[1]= (number - ((number / 10) * 10)) + '0';
+		arr[2] = '\0';
+
+	}
+
+}
+
+uint8_t Char_Arr_ToInt(uint8_t* arr){
+
+	if (arr[1] == 0){
+		return (arr[0] - '0');
+	}
+	else{
+		return (arr[0]-'0')*10 + (arr[1]-'0');
+	}
+}
+uint8_t App_GetUserInput(){
+	
+		keypad_reading = Keypad_read(ONE_PRESS);					/*read from keypad in ONE_PRESS mode*/
+		
+		if (keypad_reading != NO_KEY_PRESSED){						/*check if button is pressed*/
+			if(keypad_reading >= '0' && keypad_reading <= '9'){
+				gLcd_mode = DESIRED_MODE;
+				if (digit_count <= 1){			/*check if input digits is less than maximum digits*/
+					number[digit_count] = keypad_reading;
+					number[digit_count+1] = '\0';					/*terminate string after input character*/
+					digit_count++;
+					LCD_clearScreen();
+					LCD_displayStringRowColumn(0,0,"Desired Temp");
+					LCD_displayStringRowColumn(1,0,(char*)number);
+				}
+			}
+			if(keypad_reading == '='){
+				num_int = Char_Arr_ToInt(number);					/*get integer number from array*/
+
+				digit_count = 0;
+				number[0] = '\0';
+				number[1]='\0';
+				number[2]='\0';
+				if (num_int > 30 || num_int <15){
+					return 0;
+				}
+				else return 1;
+
+			}
+		}
+	return 255;
+}
+/*
+uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (integer)
+	static int no_of_digits = 0 ;
 	uint8_t single_key = 0 ;  
-	uint8_t array_of_keys [3] = {0 , 0 , 0} ; 
-	uint8_t counter = 0 ; 
+	static uint8_t array_of_keys [3] = {0 , 0 , 0} ; 
+	static uint8_t counter = 0 ; 
 	uint8_t int_keys = 0 ; 
 
-	while (1) {
-		single_key = KeyPad_getPressedKey () ;                               // get key pressed on keypad
-		if ((single_key != '=') && (single_key != '*') && (single_key != '%') && (single_key != '+') && (single_key != '-')) {									// user doesn't finish entering temperature
-			gLcd_mode = DESIRED_MODE;
+	
+		single_key = Keypad_read (ONE_PRESS) ; 
+
+		if ((single_key != '=') && (single_key != '*') && (single_key != '%') && (single_key != '+') && (single_key != '-') && (single_key != NO_KEY_PRESSED) && single_key != 2) {									// user doesn't finish entering temperature
 			if (no_of_digits < 2) {									// no of digits pressed still valid
 				array_of_keys [no_of_digits] = single_key ;				// add pressed key into the array of integers
 				no_of_digits ++ ;
+				
 			}
+			
 		}
 		else if (single_key == '=') {								// here the user finished entering the temperature
 			for (counter = 0 ; counter < 2 ; counter ++) {				// convert array of integers into single integer
-				int_keys = 10*int_keys + array_of_keys[counter] ;
+				int_keys = (10*int_keys) +	(int) (array_of_keys[counter]-'0') ;	
 			}
 			no_of_digits = 0 ;										// assign zero to no_of_digits to start again 
 			for (counter = 0 ; counter < 3 ; counter ++) {			// assign zeros to the array after finishing
@@ -76,13 +144,18 @@ uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (i
 			if ((int_keys >= 15) && (int_keys <= 30)) {				//check limits on inputs >= 15 , <= 30
 				return int_keys ;
 			}
+		
 			else {
 				return 0 ; 		
 			}
 		}
-	}
-}
+		else {
+			return 255;
+		}	
+		return 55;
 
+}
+*/
 /*
 Description : function to get measured temperature
 inputs		: none
@@ -110,66 +183,47 @@ void App_AdjustTemp(uint8_t currentTemp ,uint8_t desiredTemp) {
 	}
 }			
 
-void convert_2DigitInt_to_str(uint8_t number,uint8_t* arr){
-	arr[0] = (number / 10);
-
-	if (arr[0] == 0){
-		arr[0] = number + '0';
-		arr[1] = '\0';
-		return;
-	}
-	else{
-		arr[1]= (number - (arr[0]*10));
-		arr[0]+= '0';
-		arr[1]+='0';
-		arr[2]= '\0';
-	}
-}
 
 void App_PrintCurrenTemp(uint8_t current)								/*Print Temp values on LCD*/
 {
-	uint8_t* Str_number = '\0';
-	convert_2DigitInt_to_str(current,Str_number);
+	char Str_number[3];
+	convert_2DigitInt_to_str(current,(char*)Str_number);
 	LCD_clearScreen();
-	LCD_displayString(Str_number);
+	//LCD_displayStringRowColumn(0,0,"Current Temp1");
+	LCD_displayStringRowColumn(CURRENT_TEMP_ROW_COLUMN,Str_number);
 }
 
 void App_PrintDesiredMode()
 {
-	uint8_t* Str_number = '\0';
+	char Str_number[3];
 	convert_2DigitInt_to_str(gDesired_temp,Str_number);
 	LCD_clearScreen();
-	LCD_displayString(Str_number);
+	LCD_displayStringRowColumn(0,0,"Desired Temp");
+	LCD_displayStringRowColumn(DESIRED_TEMP_ROW_COLUMN,Str_number);
 }
 
 void app(){
-	uint8_t current_temp = App_MeasureCurrentTemp();
-	uint8_t stopwatch_started = 0;
-	gDesired_temp = App_GetUserInput();
-	
-	if (gDesired_temp !=0){
-		gLcd_mode = DESIRED_MODE;
-		gTimeOut = 0;										/*start counting 5 secs (reset counter to zero mode)*/
-		stopwatch_started = 1;	
-		App_AdjustTemp(current_temp,gDesired_temp);		
-	}
-	if (stopwatch_started == 1){							/*if stopwatch started counting*/
-		if(gTimeOut == 1){					/*if stopwatch finished counting	(check on count mode*/
-			gLcd_mode = ACTUAL_MODE;
-			stopwatch_started = 0;				
+	uint8_t current_temp = App_MeasureCurrentTemp();;
+	uint8_t fun_return=0;
+	fun_return = App_GetUserInput();
+	if (fun_return != 255){
+		
+		 if (fun_return == 1){
+			 gDesired_temp = num_int;
+			 gLcd_mode = ACTUAL_MODE;
+
 		}
+		else{
+			gDesired_temp = 25;
+			LCD_clearScreen();
+			LCD_displayStringRowColumn(0,0,"Not Valid!");
+			
+		}
+		
 	}
+		if(gLcd_mode == ACTUAL_MODE){							/*Desired temprature mode*/
+			App_PrintCurrenTemp(current_temp);
+			App_AdjustTemp(current_temp,gDesired_temp);
+		}
 	
-	if(gLcd_mode == DESIRED_MODE){							/*Desired temprature mode*/
-		App_PrintDesiredMode(gDesired_temp);
-	}
-	else{													/*Actual temprature mode*/
-		App_PrintCurrenTemp(current_temp);
-	}
-}
-
-
-void TimerCounter (){
-	if (gLcd_mode == DESIRED_MODE)
-		gTimeOut = 1;
 }
