@@ -2,11 +2,12 @@
  * DIO.c
  *
  * Created: 30/06/2021 
- *  Author: Mahmoud Ayoub
+ *  Author: Mohamed AbdelAzeem
  */ 
 #include "DIO_Config.h"
+#include "common_macros.h"
 
-void DIO_SetPinDirection (uint8 PortNumber , uint8 PinNumber , uint8 Direction) {
+void DIO_SetPinDirection (uint8_t PortNumber , uint8_t PinNumber , uint8_t Direction) {
 	switch (PortNumber) {
 		case portA :
 			if (Direction == OUTPUT) {
@@ -46,7 +47,7 @@ void DIO_SetPinDirection (uint8 PortNumber , uint8 PinNumber , uint8 Direction) 
 	}
 }
 
-void DIO_SetPinValue (uint8 PortNumber , uint8 PinNumber , uint8 Value) {
+void DIO_SetPinValue (uint8_t PortNumber , uint8_t PinNumber , uint8_t Value) {
 	switch (PortNumber) {
 		case portA :
 			if (Value == 1) {
@@ -85,7 +86,7 @@ void DIO_SetPinValue (uint8 PortNumber , uint8 PinNumber , uint8 Value) {
 		break;
 	}	
 }
-void DIO_TogglePinValue (uint8 PortNumber , uint8 PinNumber) {
+void DIO_TogglePinValue (uint8_t PortNumber , uint8_t PinNumber) {
 	switch (PortNumber) {
 		case portA :
 			TOGGLE_BIT(PORTA_REG , PinNumber) ; 
@@ -105,7 +106,7 @@ void DIO_TogglePinValue (uint8 PortNumber , uint8 PinNumber) {
 	}
 }
 
-void DIO_SetPortDirection (uint8 PortNumber , uint8 Direction) {
+void DIO_SetPortDirection (uint8_t PortNumber , uint8_t Direction) {
 	switch(PortNumber) {
 		case portA : 
 			if (Direction == OUTPUT) {
@@ -145,7 +146,7 @@ void DIO_SetPortDirection (uint8 PortNumber , uint8 Direction) {
 	}
 }
 
-void DIO_SetPortValue (uint8 PortNumber , uint8 Value) {
+void DIO_SetPortValue (uint8_t PortNumber , uint8_t Value) {
 	switch(PortNumber) {
 		case portA :
 			PORTA_REG = Value ; 
@@ -165,8 +166,51 @@ void DIO_SetPortValue (uint8 PortNumber , uint8 Value) {
 	}	
 }
 
-uint8 DIO_GetPinValue (uint8 PortNumber , uint8 PinNumber) {
-	uint8 value = 0 ; 
+
+void DIO_SetUpperHalfPortValue (uint8_t PortNumber , uint8_t Value) {
+	switch(PortNumber) {
+		case portA :
+		PORTA_REG = (PORTA_REG & 0x0F) |  Value ;
+		break;
+		
+		case portB :
+		PORTB_REG = (PORTB_REG & 0x0F) |  Value ;
+		break;
+		
+		case portC :
+		PORTC_REG = (PORTC_REG & 0x0F) |  Value ;
+		break;
+		
+		case portD :
+		PORTD_REG = (PORTD_REG & 0x0F) | Value  ;
+		break;
+	}
+}
+
+
+void DIO_SetLowerHalfPortValue (uint8_t PortNumber , uint8_t Value) {
+	switch(PortNumber) {
+		case portA :
+		PORTA_REG = (PORTA_REG & 0xF0) |  Value  ;
+		break;
+		
+		case portB :
+		PORTB_REG = (PORTB_REG & 0xF0) |  Value ;
+		break;
+		
+		case portC :
+		PORTC_REG = (PORTC_REG & 0xF0) | Value ;
+		break;
+		
+		case portD :
+		PORTD_REG = (PORTD_REG & 0xF0) |  Value  ;
+		break;
+	}
+}
+
+
+uint8_t DIO_GetPinValue (uint8_t PortNumber , uint8_t PinNumber) {
+	uint8_t value = 0 ; 
 	switch (PortNumber) {
 		case portA : 
 			value = (PINA_REG >> PinNumber) & 0x01 ; 	
@@ -186,8 +230,8 @@ uint8 DIO_GetPinValue (uint8 PortNumber , uint8 PinNumber) {
 	}
 	return value ; 
 }
-uint8 DIO_GetPortValue (uint8 PortNumber) {
-	uint8 value = 0 ;
+uint8_t DIO_GetPortValue (uint8_t PortNumber) {
+	uint8_t value = 0 ;
 	switch (PortNumber) {
 		case portA :
 			value = PINA_REG ;
