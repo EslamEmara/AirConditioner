@@ -10,7 +10,7 @@
 #define STOPWATCH_H_
 #include "../MCAL/TIMER/Timer.h"
 /****************************************************** GLOBAL VARIABLES *****************************************************/
-ST_TIMER_config_t config = {TIMER0, FREQ_1_MHZ, CTC_MODE}; // configure timer
+ST_TIMER_config_t config = {TIMER1, FREQ_1_MHZ, CTC_MODE}; // configure timer
 	
 /***************************************************** FUNCTIONS PROTOTYPES **************************************************/
 /*****

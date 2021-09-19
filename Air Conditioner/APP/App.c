@@ -11,20 +11,25 @@
 #define DESIRED_MODE						1
 #define ACTUAL_MODE							0
 
-#define LCD_MODE							ACTUAL_MODE
-
-uint8_t desired_temp = 25;
+uint8_t gLcd_mode = ACTUAL_MODE;
+uint8_t gDesired_temp = 25;
+uint8_t gTimeOut = 0;
 
 /*
 Description : function to initialize ECUAL (LCD , Keypad , Fan , Temp sensor)
 inputs		: none
 outputs		: none
 */
+
+void TimerCounter (void);
+
 void App_Init(void) {
 	LCD_init () ; 
 	Keypad_init () ; 
 	Fan_init () ;  
 	Temp_sensor_init () ; 
+	set_stopWatch(WAIT_TIME, TimerCounter,1);
+
 }
 
 /*
@@ -125,28 +130,33 @@ void App_PrintDesiredMode(uint8_t desired);
 }
 
 void app(){
-	
 	uint8_t current_temp = App_MeasureCurrentTemp();
 	uint8_t stopwatch_started = 0;
-	desired_temp = App_GetUserInput();
+	gDesired_temp = App_GetUserInput();
 	
-	if (desired_temp !=0){
-		Lcd_mode = DESIRED_MODE;
-		Stopwatch_start(WAIT_TIME,0);						/*start counting 5 secs (reset counter to zero mode)*/
-		stopwatch_started = 1;					
+	if (gDesired_temp !=0){
+		gLcd_mode = DESIRED_MODE;
+		gTimeOut = 0;										/*start counting 5 secs (reset counter to zero mode)*/
+		stopwatch_started = 1;	
+		App_AdjustTemp(current_temp,gDesired_temp);		
 	}
 	if (stopwatch_started == 1){							/*if stopwatch started counting*/
-		if(Stopwatch_start(WAIT_TIME,1)){					/*if stopwatch finished counting	(check on count mode*/
-			Lcd_mode = ACTUAL_MODE;
-			App_AdjustTemp(current_temp,desired_temp);
+		if(gTimeOut == 1){					/*if stopwatch finished counting	(check on count mode*/
+			gLcd_mode = ACTUAL_MODE;
 			stopwatch_started = 0;				
 		}
 	}
 	
-	if(Lcd_mode == DESIRED_MODE){							/*Desired temprature mode*/
-		App_PrintDesiredMode(desired_temp);
+	if(gLcd_mode == DESIRED_MODE){							/*Desired temprature mode*/
+		App_PrintDesiredMode(gDesired_temp);
 	}
 	else{													/*Actual temprature mode*/
 		App_PrintCurrenTemp(current_temp);
 	}
+}
+
+
+void TimerCounter (){
+	if (gLcd_mode == DESIRED_MODE)
+		gTimeOut = 1;
 }
