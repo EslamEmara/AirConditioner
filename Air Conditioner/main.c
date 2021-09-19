@@ -1,16 +1,15 @@
 /*
- * AirConditioner.c
+ * Air Conditioner.c
  *
- * Created: 9/17/2021 1:13:14 PM
- * Author : OverFlow
+ * Created: 9/19/2021 2:20:26 PM
+ * Author : 20109
  */ 
 
-#include "APP/App.h"
+#include <avr/io.h>
 
 
 int main(void)
 {
-	
     /* Replace with your application code */
     while (1) 
     {
