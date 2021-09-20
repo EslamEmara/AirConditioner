@@ -6,7 +6,7 @@
  */ 
 
 #include "LM35.h"
-void Lm35_init(EN_SensorID_t SensorID)
+void Lm35_init()
 {
 	ADC_Init(AutoTrig_FreeRun, ADC_Div_128, ADC_Polling, _2_56V_VoltREF); // initialize ADC
 }

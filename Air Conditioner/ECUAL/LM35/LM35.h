@@ -24,10 +24,10 @@ typedef enum{
 
 /*****
  * Description: this function initiates LM35 which enables ADC channel and start converting the reading of LM35 
- * Parameters: SensorID: selects the pin (channel) LM35 connected to
+ * Parameters: none
  * Return: none
  */
-void Lm35_init(EN_SensorID_t SensorID);		/*init lm35 according to channel*/
+void Lm35_init();		/*initialize lm35 */
 
 /*****
  * Description: this function gets the current temperature
