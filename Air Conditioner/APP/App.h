@@ -42,6 +42,9 @@ void App_PrintDesiredMode();
 
 void app();
 
+uint8_t Char_Arr_ToInt(uint8_t* arr);
+void convert_2DigitInt_to_str(uint8_t number,char* arr);
+
 
 
 #endif /* APP_H_ */
