@@ -15,7 +15,7 @@
 #include "../../MCAL/TIMER/Timer.h"
 
 
-ST_TIMER_config_t timer0_config1 = {TIMER0,FREQ_1_MHZ, CTC_MODE };
+ST_TIMER_config_t timer0_config1 = {TIMER0,FREQ_1_MHZ, NORMAL_MODE };
 
 /*******************************************************************************
  *                      Functions Definitions                                  *
@@ -258,7 +258,7 @@ void LCD_displayStringRowColumn(uint8_t row,uint8_t col,char *Str)
 
 void LCD_intgerToString(int data)
 {
-   uint8_t buff[16]; /* String to hold the ascii result */
+   char buff[16]; /* String to hold the ascii result */
    tostring(buff,data); /* 10 for decimal */
    LCD_displayString(buff);
 }
@@ -269,7 +269,7 @@ void LCD_clearScreen(void)
 }
 
 
-void tostring(uint8_t str[], uint8_t number)
+void tostring(char str[], uint8_t number)
 {
 	uint8_t iterator;
 	uint8_t StringLength = 0 ;

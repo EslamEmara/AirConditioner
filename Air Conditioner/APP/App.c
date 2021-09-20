@@ -41,8 +41,6 @@ void App_Init(void) {
 	Keypad_init(); 
 	Lm35_init (LM35_ID0) ;
 	Motor_init(	MOTOR_1_config );; 
-	//set_stopWatch(WAIT_TIME, TimerCounter,1);
-	//LCD_displayStringRowColumn(0,0,"Current");
 	gLcd_mode = ACTUAL_MODE;
 	gDesired_temp = 25;
 	gTimeOut = 0;
@@ -113,49 +111,7 @@ uint8_t App_GetUserInput(){
 		}
 	return 255;
 }
-/*
-uint8_t App_GetUserInput() {												/*Get desired temperature from keypad (integer)
-	static int no_of_digits = 0 ;
-	uint8_t single_key = 0 ;  
-	static uint8_t array_of_keys [3] = {0 , 0 , 0} ; 
-	static uint8_t counter = 0 ; 
-	uint8_t int_keys = 0 ; 
 
-	
-		single_key = Keypad_read (ONE_PRESS) ; 
-
-		if ((single_key != '=') && (single_key != '*') && (single_key != '%') && (single_key != '+') && (single_key != '-') && (single_key != NO_KEY_PRESSED) && single_key != 2) {									// user doesn't finish entering temperature
-			if (no_of_digits < 2) {									// no of digits pressed still valid
-				array_of_keys [no_of_digits] = single_key ;				// add pressed key into the array of integers
-				no_of_digits ++ ;
-				
-			}
-			
-		}
-		else if (single_key == '=') {								// here the user finished entering the temperature
-			for (counter = 0 ; counter < 2 ; counter ++) {				// convert array of integers into single integer
-				int_keys = (10*int_keys) +	(int) (array_of_keys[counter]-'0') ;	
-			}
-			no_of_digits = 0 ;										// assign zero to no_of_digits to start again 
-			for (counter = 0 ; counter < 3 ; counter ++) {			// assign zeros to the array after finishing
-				array_of_keys [counter] = 0 ;
-			}
-			// return converted value
-			if ((int_keys >= 15) && (int_keys <= 30)) {				//check limits on inputs >= 15 , <= 30
-				return int_keys ;
-			}
-		
-			else {
-				return 0 ; 		
-			}
-		}
-		else {
-			return 255;
-		}	
-		return 55;
-
-}
-*/
 /*
 Description : function to get measured temperature
 inputs		: none
@@ -188,8 +144,7 @@ void App_PrintCurrenTemp(uint8_t current)								/*Print Temp values on LCD*/
 {
 	char Str_number[3];
 	convert_2DigitInt_to_str(current,(char*)Str_number);
-	LCD_clearScreen();
-	//LCD_displayStringRowColumn(0,0,"Current Temp1");
+	LCD_displayStringRowColumn(0,0,"Current Temp");
 	LCD_displayStringRowColumn(CURRENT_TEMP_ROW_COLUMN,Str_number);
 }
 

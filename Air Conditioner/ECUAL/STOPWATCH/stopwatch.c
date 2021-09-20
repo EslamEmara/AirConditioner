@@ -5,7 +5,7 @@
  *  Author: Omar
  */ 
 #include "stopwatch.h"
-ST_TIMER_config_t StopWatchConfig = {TIMER1, FREQ_1_MHZ, CTC_MODE}; // configure timer
+ST_TIMER_config_t StopWatchConfig = {TIMER1, FREQ_8_MHZ, CTC_MODE}; // configure timer
 
 void set_stopWatch(float delay, void (*function)(void), uint8_t repeating_number)
 {

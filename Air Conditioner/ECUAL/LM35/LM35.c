@@ -12,5 +12,9 @@ void Lm35_init(EN_SensorID_t SensorID)
 }
 uint8_t Lm35_GetTemp(EN_SensorID_t SensorID)
 {
-	return ADC_GetReading(SensorID); // get the converted reading from ADC data register
+	// get the converted reading from ADC data register
+	uint8_t digital_reading = ADC_GetReading(SensorID);
+	// convert digital value to temprature in c
+	float32_t temprature = (digital_reading * 100 * 2.56)/(1024);
+	return temprature;
 }
