@@ -29,7 +29,7 @@ void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_ConvCompleteCheck int_o
 	ADMUX  = 0x00;
 	ADCSRA = 0x00;
     // set ADEN in ADCSRA (ADC Enable)
-    SET_BIT(ADCSRA,7);
+    SET_BIT(ADCSRA,ADC_ENABLE_BIT);
 	// enable channel & define the refrence voltage
 	ADMUX |= ref_volt;  //0b11000010
 	// set preescaler & trigger mode & int_or_polling
@@ -53,14 +53,14 @@ uint16_t ADC_GetReading(ADC_Ch_Select channel)
 	// select ADC channel
 	ADMUX |=  channel;
 	// set ADSC in ADCSRA ADC (start conversion)
-	SET_BIT(ADCSRA,6);
+	SET_BIT(ADCSRA,ADC_START_CONVERSION);
 	// wait until flag is set (conversion completed)
-	while(!GET_BIT(ADCSRA,4));
+	while(!GET_BIT(ADCSRA,ADC_CONVERSION_COMPLETED_FLAG));
 	
 	uint16_t reading = ADC_DATA; // store ADC data register value
 	
 	// clear the flag (must be done after reading adc data)
-	SET_BIT(ADCSRA,4);
+	SET_BIT(ADCSRA,ADC_CONVERSION_COMPLETED_FLAG);
 	
 	
 	return reading;
