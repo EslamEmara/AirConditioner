@@ -94,7 +94,12 @@ void ADC_Init(ADC_Mode Mode, ADC_Prescale Prescaler, ADC_ConvCompleteCheck int_o
  */
 uint16_t ADC_GetReading(ADC_Ch_Select channel);
 
-// Not used
+/*****
+ * Description: set a function in ADC module to application functopn to perform callback 
+ * Paramerters: pointer_to_func (app function)
+ * Return: None
+ * Ex: ADC_Set_Callback(function_name);
+ */
 void ADC_Set_Callback(void(*pf)(void));
 
 /******* Sequence of configuring ADC *******************
