@@ -20,4 +20,10 @@ void (*volatile ADC_Callback) (void);
 #define SFIOR   *((volatile uint8_t *)0x50)
 #define ADC_DATA *((volatile uint16_t *)0x24)
 
+
+//------ Bit Definition ---------
+#define ADC_ENABLE_BIT   		7
+#define ADC_START_CONVERSION	6
+#define ADC_CONVERSION_COMPLETED_FLAG 4
+
 #endif 
