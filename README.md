@@ -9,10 +9,11 @@ Creators :  </br>
 - Mohamed Abdelazeem  </br>
 - Mahmoud Ayoub  </br>
 _______________________________________________________________ </br>
-Inputs: </br>
-- Keypad to set the desired temprature  </br>
-- LM35 sensor to get the temprature feedback  </br> 
 
-Ouptuts:  </br>
-- LCD to print instructions and tempratures.  </br>
+Inputs: </br>
+- Keypad to set the desired temprature </br>
+- LM35 sensor to get the temprature feedback </br> 
+
+Ouptuts: </br>
+- LCD to print instructions and tempratures. </br>
 - Motor to control the temprature with it.
